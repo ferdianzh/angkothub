@@ -89,6 +89,20 @@ class Model extends Database{
       return $this->rowCount();
    }
 
+   public function addGeoLine($colName, $colValue, $target, $params)
+   {
+      // input rute = "y, x; y, x; y, x";
+      $lineExample = 'LineString(1 1,2 2,3 3)';
+      $line = str_replace(',', '', $params['line']);
+      $line = str_replace(';', ',', $line);
+      $line = "LineString(".$line.")";
+      $this->query("UPDATE $this->table SET $target=GeomFromText($line) WHERE $colName=$colValue");
+
+      $this->execute();
+
+      return $this->rowCount();
+   }
+
    public function delete($id)
    {
       $this->query("DELETE FROM $this->table WHERE id= $id");

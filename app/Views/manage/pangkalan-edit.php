@@ -18,12 +18,8 @@
          <input type="text" class="form-control" id="nama" name="nama" placeholder="Nama Pangkalan atau Terminal" value="<?= $pangkalan['nama'] ?>">
       </div>
       <div class="col-md-6">
-         <label for="kordinat_x" class="form-label">Kordinat X</label>
-         <input type="text" class="form-control" id="kordinat_x" name="kordinat_x" value="<?= $pangkalan['kordinat_x'] ?>">
-      </div>
-      <div class="col-md-6">
-         <label for="kordinat_y" class="form-label">Kordinat Y</label>
-         <input type="text" class="form-control" id="kordinat_y" name="kordinat_y" value="<?= $pangkalan['kordinat_y'] ?>">
+         <label for="kordinat" class="form-label">Kordinat X</label>
+         <input type="text" class="form-control" id="kordinat" name="kordinat" value="<?= $pangkalan['kordinat_y'].', '.$pangkalan['kordinat_x'] ?>">
       </div>
       <div class="col-12">
          <button type="submit" class="btn btn-dark">Submit</button>

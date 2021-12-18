@@ -53,14 +53,25 @@ class Manage extends Controller
       Session::setFlashdata('Manage Angkot');
 
       if ( is_null($id) ) {
-         return $this->view("manage/angkot-show");
+         $data = [
+            'angkot' => $this->angkotModel
+                           ->select('id, id_pangkalan, kode, warna, gambar, rute, AsText(rute_berangkat) as rute_berangkat, AsText(rute_kembali) as rute_kembali')->get(),
+         ];
+
+         return $this->view("manage/angkot-show", $data);
+      }
+
+      if ( !is_numeric($id) ) {
+         return $this->view("manage/pangkalan-add");
       }
 
       $data = [
-         'id' => $id,
+         'pangkalan' => $this->pangkalanModel
+                        ->select('id, nama, tipe, X(kordinat) AS kordinat_x, Y(kordinat) AS kordinat_y')
+                        ->where('id', $id)->first(),
       ];
 
-      return $this->view("manage/angkot-edit", $data);
+      return $this->view("manage/pangkalan-edit", $data);
    }
 
    public function save($table)
@@ -69,20 +80,22 @@ class Manage extends Controller
 
       switch ($table) {
          case "pangkalan":
+            $kordinat = explode(', ', $data['kordinat']);
             $this->pangkalanModel->insert([
-               'id' => $data['id'],
                'nama' => $data['nama'],
                'tipe' => $data['tipe'],
             ]);
-            $this->pangkalanModel->addGeoPoint('id', $data['id'], 'kordinat', [
-               'x' => $data['kordinat_x'],
-               'y' => $data['kordinat_y'],
+            $insertedId = $this->pangkalanModel->insertedId();
+            $this->pangkalanModel->addGeoPoint('id', $insertedId, 'kordinat', [
+               'x' => $kordinat[1],
+               'y' => $kordinat[0],
             ]);
-            
             $this->redirect('/manage/pangkalan');
             break;
+
          case "angkot":
             break;
+
          default:
             header("location:javascript://history.go(-1)");
       }
@@ -94,14 +107,15 @@ class Manage extends Controller
 
       switch ($table) {
          case "pangkalan":
+            $kordinat = explode(', ', $newData['kordinat']);
             $this->pangkalanModel->update('id', $id, [
                'id' => $newData['id'],
                'tipe' => $newData['tipe'],
                'nama' => $newData['nama'],
             ]);
             $this->pangkalanModel->addGeoPoint('id', $id, 'kordinat', [
-               'x' => $newData['kordinat_x'],
-               'y' => $newData['kordinat_y'],
+               'x' => $kordinat[1],
+               'y' => $kordinat[0],
             ]);
 
             $this->redirect('/manage/pangkalan');

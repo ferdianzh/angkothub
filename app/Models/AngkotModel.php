@@ -10,6 +10,6 @@ class AngkotModel extends Model {
         parent::__construct();
         
         $this->table = 'angkot';
-        $this->field = ['id', 'id_pangkalan', 'kode', 'warna', 'rute', 'rute_berangkat', 'rute_kembali'];
+        $this->field = ['id', 'id_pangkalan', 'kode', 'warna', 'gambar', 'rute', 'rute_berangkat', 'rute_kembali'];
     }
 }
