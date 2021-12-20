@@ -8,7 +8,7 @@
          <tr class="table-warning">
             <th scope="col">#</th>
             <th scope="col">ID</th>
-            <th scope="col">ID Pangkalan</th>
+            <th scope="col">Pangkalan</th>
             <th scope="col">Kode</th>
             <th scope="col">Warna</th>
             <th scope="col">Gambar</th>

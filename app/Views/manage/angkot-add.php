@@ -1,21 +1,35 @@
 <?php $this->view("templates/header2") ?>
 
 <div class="container mt-3">
-   <form class="row g-3" action="<?= BASEURL ?>/manage/save/pangkalan" method="post">
-      <div class="col-12">
-         <label for="nama" class="form-label">Nama</label>
-         <input type="text" class="form-control" id="nama" name="nama" placeholder="Nama Pangkalan atau Terminal">
-      </div>
-      <div class="col-md-4">
-         <label for="tipe" class="form-label">Tipe</label>
-         <select id="tipe" class="form-select" name="tipe">
-            <option value="1">Pangkalan</option>
-            <option value="2">Terminal</option>
+   <form class="row g-3" action="<?= BASEURL ?>/manage/save/angkot" method="post">
+      <div class="col-4">
+         <label for="id_pangkalan" class="form-label">Pangkalan</label>
+         <select id="id_pangkalan" class="form-select" name="id_pangkalan">
+            <?php foreach ( $pangkalan as $pangkal ) : ?>
+            <option value="<?= $pangkal['id'] ?>"><?= $pangkal['nama'] ?></option>
+            <?php endforeach; ?>
          </select>
       </div>
-      <div class="col-md-8">
-         <label for="kordinat" class="form-label">Kordinat</label>
-         <input type="text" class="form-control" id="kordinat" name="kordinat">
+      <div class="col-4">
+         <label for="kode" class="form-label">Kode</label>
+         <input type="text" class="form-control" id="kode" name="kode" placeholder="Kode Angkutan">
+      </div>
+      <div class="col-4">
+         <label for="warna" class="form-label">Warna</label>
+         <input type="text" class="form-control" id="warna" name="warna">
+      </div>
+      <div class="col-12">
+         <label for="rute" class="form-label">Rute</label>
+         <input type="text" class="form-control" id="rute" name="rute">
+      </div>
+      <div class="col-12">
+         <label for="rute_berangkat" class="form-label">Line Rute Berangkat</label>
+         <textarea class="form-control" name="rute_berangkat" id="rute_berangkat" rows="3" placeholder="Format: [y, x], [y, x],..."></textarea>
+      </div>
+      <div class="col-12">
+         <label for="rute_kembali" class="form-label">Line Rute Kembali</label>
+         <textarea class="form-control" name="rute_kembali" id="rute_kembali" rows="3"
+         placeholder="Format: [y, x], [y, x],..."></textarea>
       </div>
       <div class="col-12">
          <button type="submit" class="btn btn-dark">Submit</button>

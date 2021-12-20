@@ -4,7 +4,7 @@
    <form class="row g-3" action="<?= BASEURL ?>/manage/update/pangkalan/<?= $pangkalan['id'] ?>" method="POST">
       <div class="col-8">
          <label for="id" class="form-label">ID</label>
-         <input type="text" class="form-control" id="id" name="id" placeholder="Kode ID" value="<?= $pangkalan['id'] ?>">
+         <input type="text" class="form-control" id="id" name="id" placeholder="Kode ID" value="<?= $pangkalan['id'] ?>" disabled readonly>
       </div>
       <div class="col-md-4">
          <label for="tipe" class="form-label">Tipe</label>
@@ -18,7 +18,7 @@
          <input type="text" class="form-control" id="nama" name="nama" placeholder="Nama Pangkalan atau Terminal" value="<?= $pangkalan['nama'] ?>">
       </div>
       <div class="col-md-6">
-         <label for="kordinat" class="form-label">Kordinat X</label>
+         <label for="kordinat" class="form-label">Kordinat</label>
          <input type="text" class="form-control" id="kordinat" name="kordinat" value="<?= $pangkalan['kordinat_y'].', '.$pangkalan['kordinat_x'] ?>">
       </div>
       <div class="col-12">

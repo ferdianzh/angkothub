@@ -7,7 +7,7 @@
             <nav class="bg-light pt-3">
                 <div class="nav nav-tabs justify-content-center" id="nav-tab" role="tablist">
                     <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-rute" type="button" role="tab" aria-controls="nav-rute" aria-selected="true">Cari Rute</button>
-                    <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-pangkalan" type="button" role="tab" aria-controls="nav-pangkalan" aria-selected="false">Pangkalan</button>
+                    <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-pangkalan" type="button" role="tab" aria-controls="nav-pangkalan" aria-selected="false">Pemberhentian</button>
                     <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-angkot" type="button" role="tab" aria-controls="nav-angkot" aria-selected="false">Angkot</button>
                 </div>
             </nav>
@@ -71,18 +71,14 @@
    integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
    crossorigin="">
 </script>
+<script src="<?= BASEURL ?>/js/leaflet/leaflet.base.js"></script>
 <script>
+    // map init
     var map = L.map('map').setView([-7.26811, 112.66676], 13);
+    tiles.addTo(map);
+    map.on('click', onMapClick);
 
-    var tiles = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
-        maxZoom: 18,
-        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
-            'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-        id: 'mapbox/light-v9',
-        tileSize: 512,
-        zoomOffset: -1
-    }).addTo(map);
-
+    // marker pangkalan
     <?php foreach ( $pangkalan as $pangkal ) : ?>
     var marker = L.marker([
                         <?= $pangkal['kordinat_y'].', '.$pangkal['kordinat_x'] ?>
@@ -91,22 +87,12 @@
                     );
     <?php endforeach; ?>
 
-    // var pathLine = L.polyline([
-    //     [-7.26811, 112.65676],
-    //     [-7.27811, 112.66676],
-    //     [-7.26811, 112.67676],
-    // ]).addTo(map)
-
-    var popup = L.popup();
-
-    function onMapClick(e) {
-        popup
-            .setLatLng(e.latlng)
-            .setContent("You clicked the map at " + e.latlng.toString())
-            .openOn(map);
-    }
-
-    map.on('click', onMapClick);
+    // line rute angkot
+    <?php foreach ( $angkot as $angkt ) : ?>
+    var pathLine = L.polyline([
+        <?= '['.$angkt['rute_berangkat'].'],' ?>
+    ]).addTo(map)
+    <?php endforeach; ?>
 </script>
 
 <?php $this->view("templates/footer") ?>

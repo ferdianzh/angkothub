@@ -7,6 +7,9 @@ class Model extends Database{
    protected $field;
    protected $result;
 
+   /**
+    * Get all query result
+    */
    public function get()
    {
       if ( !isset($this->stmt) ) {
@@ -16,18 +19,27 @@ class Model extends Database{
       return $this->result;
    }
 
+   /**
+    * Get first query result
+    */
    public function first()
    {
       $this->result = $this->resultSingle();
       return $this->result;
    }
 
+   /**
+    * Select a table column
+    */
    public function select($params)
    {
       $this->query("SELECT $params FROM $this->table");
       return $this;
    }
 
+   /**
+    * Add condition to query
+    */
    public function where($dbColumn, $inputColumn)
    {
       if ( empty($this->stmt) ) {
@@ -39,6 +51,9 @@ class Model extends Database{
       return $this;
    }
 
+   /**
+    * Insert new data to database
+    */
    public function insert($params)
    {
       $cols = $this->field;
@@ -58,6 +73,9 @@ class Model extends Database{
       return $this->rowCount();
    }
 
+   /**
+    * Update value of a data
+    */
    public function update($colName, $colValue, $params)
    {
       $columns = "";
@@ -79,6 +97,9 @@ class Model extends Database{
       return $this->rowCount();
    }
 
+   /**
+    * Add point value to a data
+    */
    public function addGeoPoint($colName, $colValue, $target, $params)
    {
       $point = "'POINT(".$params['x']." ".$params['y'].")'";
@@ -89,20 +110,27 @@ class Model extends Database{
       return $this->rowCount();
    }
 
-   public function addGeoLine($colName, $colValue, $target, $params)
+   /**
+    * Add linestring value to a data
+    */
+   public function addGeoLine($colName, $colValue, $params)
    {
-      // input rute = "y, x; y, x; y, x";
-      $lineExample = 'LineString(1 1,2 2,3 3)';
-      $line = str_replace(',', '', $params['line']);
-      $line = str_replace(';', ',', $line);
-      $line = "LineString(".$line.")";
-      $this->query("UPDATE $this->table SET $target=GeomFromText($line) WHERE $colName=$colValue");
+      // $inputExample = [-7.26811, 112.65676], [-7.27811, 112.66676];
+      // $lineExample = 'LineString(1 1,2 2,3 3)';
 
-      $this->execute();
+      foreach ( $params as $paramKey => $paramVal ) {
+         $line = "'".$paramVal."'";
+         $this->query("UPDATE $this->table SET $paramKey=GeomFromText($line) WHERE $colName=$colValue");
+
+         $this->execute();
+      }
 
       return $this->rowCount();
    }
 
+   /**
+    * Delete a data from table
+    */
    public function delete($id)
    {
       $this->query("DELETE FROM $this->table WHERE id= $id");

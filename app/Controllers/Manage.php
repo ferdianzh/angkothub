@@ -1,6 +1,7 @@
 <?php
 
 use Core\Controller;
+use Functions\Geo;
 use Functions\Session;
 use Models\AngkotModel;
 use Models\PangkalanModel;
@@ -58,20 +59,33 @@ class Manage extends Controller
                            ->select('id, id_pangkalan, kode, warna, gambar, rute, AsText(rute_berangkat) as rute_berangkat, AsText(rute_kembali) as rute_kembali')->get(),
          ];
 
+         for ( $i=0; $i<count($data['angkot']); $i++ ) {
+            $data['angkot'][$i]['rute_berangkat'] = Geo::lineToLeaflet($data['angkot'][$i]['rute_berangkat']);
+            $data['angkot'][$i]['rute_kembali'] = Geo::lineToLeaflet($data['angkot'][$i]['rute_kembali']);
+         }
+
          return $this->view("manage/angkot-show", $data);
       }
 
       if ( !is_numeric($id) ) {
-         return $this->view("manage/pangkalan-add");
+         $data = [
+            'pangkalan' => $this->pangkalanModel->select('id, nama')->get(),
+         ];
+
+         return $this->view("manage/angkot-add", $data);
       }
 
       $data = [
-         'pangkalan' => $this->pangkalanModel
-                        ->select('id, nama, tipe, X(kordinat) AS kordinat_x, Y(kordinat) AS kordinat_y')
+         'angkot' => $this->angkotModel
+                        ->select('id, id_pangkalan, kode, warna, gambar, rute, AsText(rute_berangkat) as rute_berangkat, AsText(rute_kembali) as rute_kembali')
                         ->where('id', $id)->first(),
+         'pangkalan' => $this->pangkalanModel->select('id, nama')->get(),
       ];
 
-      return $this->view("manage/pangkalan-edit", $data);
+      $data['angkot']['rute_berangkat'] = Geo::lineToLeaflet($data['angkot']['rute_berangkat']);
+      $data['angkot']['rute_kembali'] = Geo::lineToLeaflet($data['angkot']['rute_kembali']);
+
+      return $this->view("manage/angkot-edit", $data);
    }
 
    public function save($table)
@@ -94,6 +108,18 @@ class Manage extends Controller
             break;
 
          case "angkot":
+            $this->angkotModel->insert([
+               'id_pangkalan' => $data['id_pangkalan'],
+               'kode' => $data['kode'],
+               'warna' => $data['warna'],
+               'rute' => $data['rute'],
+            ]);
+            $insertedId = $this->angkotModel->insertedId();
+            $this->angkotModel->addGeoLine('id', $insertedId, [
+               'rute_berangkat' => Geo::leafletToLine($data['rute_berangkat']),
+               'rute_kembali' => Geo::leafletToLine($data['rute_kembali']),
+            ]);
+            $this->redirect('/manage/angkot');
             break;
 
          default:
@@ -127,13 +153,14 @@ class Manage extends Controller
       switch ($table) {
          case "pangkalan":
             $this->pangkalanModel->delete($id);
+            $this->redirect('/manage/pangkalan');
             break;
          case "angkot":
             $this->angkotModel->delete($id);
+            $this->redirect('/manage/angkot');
             break;
          default:
             Session::setFlashdata("data tidak ditemukan");
       }
-      $this->redirect('/manage/pangkalan');
    }
 }
