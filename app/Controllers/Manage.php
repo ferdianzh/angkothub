@@ -135,7 +135,6 @@ class Manage extends Controller
          case "pangkalan":
             $kordinat = explode(', ', $newData['kordinat']);
             $this->pangkalanModel->update('id', $id, [
-               'id' => $newData['id'],
                'tipe' => $newData['tipe'],
                'nama' => $newData['nama'],
             ]);
@@ -145,6 +144,26 @@ class Manage extends Controller
             ]);
 
             $this->redirect('/manage/pangkalan');
+            break;
+         
+         case "angkot":
+            // $this->angkotModel->update('id', $id, [
+            //    'id_pangkalan' => $newData['id_pangkalan'],
+            //    'kode' => $newData['kode'],
+            //    'warna' => $newData['warna'],
+            //    'gambar' => $newData['gambar'],
+            //    'rute' => $newData['rute'],
+            // ]);
+            $this->angkotModel->addGeoLine('id', $id, [
+               'rute_berangkat' => Geo::leafletToLine($newData['rute_berangkat']),
+               'rute_kembali' => Geo::leafletToLine($newData['rute_kembali']),
+            ]);
+
+            $this->redirect('/manage/angkot');
+            break;
+         
+         default:
+            header("location:javascript://history.go(-1)");
       }
    }
 

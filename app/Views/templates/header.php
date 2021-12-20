@@ -13,10 +13,14 @@ use Functions\Session;
 
     <!-- style -->
     <link rel="stylesheet" href="<?= BASEURL ?>/css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="<?= BASEURL ?>/css/fontawesome-free-5.15.4-web/css/all.min.css">
+    <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/1.5.2/css/ionicons.min.css">
+    <link rel="stylesheet" href="<?= BASEURL ?>/css/leaflet.awesome-markers.css">
     <link rel="stylesheet" href="<?= BASEURL ?>/css/style.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
         integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
         crossorigin=""/>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
     <!-- endstyle -->
 
 </head>

@@ -4,12 +4,12 @@ var tiles = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}
    maxZoom: 18,
    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
       'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-   id: 'mapbox/light-v9',
+   id: 'mapbox/streets-v11',
    tileSize: 512,
    zoomOffset: -1
 });
 
-// popup layer
+// map popup layer
 var popup = L.popup();
 
 function onMapClick(e) {
@@ -18,3 +18,17 @@ function onMapClick(e) {
       .setContent("You clicked the map at " + e.latlng.toString())
       .openOn(map);
 }
+
+// marker icon pangkalan
+var userMarker = L.AwesomeMarkers.icon({
+   icon: 'user',
+   markerColor: 'red',
+   prefix: 'fa'
+});
+
+// marker icon pangkalan
+var pangkalanMarker = L.AwesomeMarkers.icon({
+   icon: 'bus',
+   markerColor: 'green',
+   prefix: 'fa'
+});

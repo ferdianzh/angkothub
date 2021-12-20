@@ -19,6 +19,10 @@
          <label for="warna" class="form-label">Warna</label>
          <input type="text" class="form-control" id="warna" name="warna" value="<?= $angkot['warna'] ?>">
       </div>
+      <div class="col-4" hidden>
+         <label for="gambar" class="form-label">Gambar</label>
+         <input type="text" class="form-control" id="gambar" name="gambar" value="<?= $angkot['gambar'] ?>">
+      </div>
       <div class="col-12">
          <label for="rute" class="form-label">Rute</label>
          <input type="text" class="form-control" id="rute" name="rute" value="<?= $angkot['rute'] ?>">

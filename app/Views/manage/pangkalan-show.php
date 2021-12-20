@@ -7,7 +7,6 @@
          <tr class="bg-dark text-white"><th colspan="7"><h2>Pangkalan</h2></th></tr>
          <tr class="table-warning">
             <th scope="col">#</th>
-            <th scope="col">ID</th>
             <th scope="col">Nama</th>
             <th scope="col">Tipe</th>
             <th scope="col">Kordinat X</th>
@@ -20,7 +19,6 @@
       <tbody>
          <tr>
             <th scope="row"><?= $i ?></th>
-            <td><?= $pangkal['id'] ?></td>
             <td><?= $pangkal['nama'] ?></td>
             <td><?= $pangkal['tipe'] ?></td>
             <td><?= $pangkal['kordinat_x'] ?></td>

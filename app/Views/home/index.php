@@ -1,6 +1,6 @@
 <?php $this->view("templates/header") ?>
 
-<main class="container-fluid" style="height: 100vh; padding-top: 56px;">
+<main class="container-fluid overflow-hidden" style="height: 100vh; padding-top: 56px;">
     <div class="row h-100">
 
         <div class="col-3 px-0 shadow">
@@ -18,14 +18,18 @@
                         <label for="awal" class="form-label">Posisi Awal</label>
                         <div class="input-group mb-3">
                             <input type="text" class="form-control" id="awal">
-                            <button class="btn btn-dark" type="button" id="button-awal">Pilih</button>
+                            <button class="btn btn-dark" type="button" id="button-awal">
+                                <i class="fas fa-search-location"></i>
+                            </button>
                         </div>
                     </div>
                     <div class="mb-3">
                         <label for="tujuan" class="form-label">Tujuan</label>
                         <div class="input-group mb-3">
                             <input type="text" class="form-control" id="tujuan">
-                            <button class="btn btn-dark" type="button" id="button-tujuan">Pilih</button>
+                            <button class="btn btn-dark" type="button" id="button-tujuan">
+                                <i class="fas fa-search-location"></i>
+                            </button>
                         </div>
                     </div>
                     <div class="text-center">
@@ -33,12 +37,12 @@
                     </div>
                 </div>
 
-                <div class="tab-pane fade" id="nav-pangkalan" role="tabpanel">
+                <div class="tab-pane fade overflow-auto" id="nav-pangkalan" role="tabpanel" style="height: 500px;">
                     <div class="list-group" id="list-tab" role="tablist">
                     <?php foreach ( $pangkalan as $pangkal ) : ?>
                         <a class="list-group-item list-group-item-action" id="list-home-list" data-bs-toggle="list" href="#list-home" role="tab" aria-controls="list-home">
-                            <h5><?= $pangkal['nama'] ?></h5>
-                            <p>Tipe: <?php if($pangkal['tipe'] == '1') echo 'Pangkalan'; else echo 'Terminal'; ?></p>
+                            <h5 class="mb-1"><?= $pangkal['nama'] ?></h5>
+                            <p class="mb-1">Tipe: <?php if($pangkal['tipe'] == '1') echo 'Pangkalan'; else echo 'Terminal'; ?></p>
                         </a>
                     <?php endforeach; ?>
                     </div>
@@ -46,17 +50,17 @@
                 
                 <div class="tab-pane fade" id="nav-angkot" role="tabpanel">
                     <div class="list-group" id="list-tab" role="tablist">
-                    <?php for ( $i=0; $i<3; $i++ ) : ?>
+                    <?php foreach ( $angkot as $angkt ) : ?>
                         <a class="list-group-item list-group-item-action" id="list-home-list" data-bs-toggle="list" href="#list-home" role="tab" aria-controls="list-home">
                             <div class="row">
-                                <div class="col-4">Gambar</div>
-                                <div class="col-8">
-                                    <h5>Kode Angkot</h5>
-                                    <p>Kode Rute</p>
+                                <!-- <div class="col-4">Gambar</div> -->
+                                <div class="col">
+                                    <h5 class="mb-1" style="color: <?= $angkt['warna'] ?>;"><?= $angkt['kode'] ?></h5>
+                                    <p class="mb-1"><?= $angkt['rute'] ?></p>
                                 </div>
-                            </div>    
+                            </div>
                         </a>
-                    <?php endfor; ?>
+                    <?php endforeach; ?>
                     </div>
                 </div>
             </div>
@@ -71,18 +75,30 @@
    integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
    crossorigin="">
 </script>
+<script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
+<script src="<?= BASEURL ?>/js/leaflet.awesome-markers.js"></script>
 <script src="<?= BASEURL ?>/js/leaflet/leaflet.base.js"></script>
 <script>
     // map init
-    var map = L.map('map').setView([-7.26811, 112.66676], 13);
+    var map = L.map('map').locate({setView: true, maxZoom: 14});
     tiles.addTo(map);
     map.on('click', onMapClick);
 
+    // marker user
+    map.on('locationfound', function(e){
+        var marker = L.marker([e.latitude, e.longitude], {icon: userMarker}).bindPopup('Your are here :)');
+        map.addLayer(marker);
+    })
+    .on('locationerror', function(e){
+        console.log(e);
+        alert("Location access denied.");
+    });
+                    
     // marker pangkalan
     <?php foreach ( $pangkalan as $pangkal ) : ?>
     var marker = L.marker([
                         <?= $pangkal['kordinat_y'].', '.$pangkal['kordinat_x'] ?>
-                    ]).addTo(map).bindPopup(
+                    ], {icon: pangkalanMarker}).addTo(map).bindPopup(
                         '<b><?= $pangkal['nama'] ?></b><hr/>Atur sebagai titik tujuan'
                     );
     <?php endforeach; ?>
@@ -91,8 +107,18 @@
     <?php foreach ( $angkot as $angkt ) : ?>
     var pathLine = L.polyline([
         <?= '['.$angkt['rute_berangkat'].'],' ?>
-    ]).addTo(map)
+    ]).addTo(map).bindPopup(
+        '<b style="color: <?= $angkt['warna'] ?>">Rute <?= $angkt['kode'] ?></b><hr/>Atur sebagai titik tujuan'
+    );
     <?php endforeach; ?>
+
+    // // auto routing
+    // L.Routing.control({
+    //     waypoints: [
+    //         L.latLng(-7.260393, 112.634947),
+    //         L.latLng(-7.268566, 112.666431)
+    //     ],
+    // }).addTo(map);
 </script>
 
 <?php $this->view("templates/footer") ?>
