@@ -40,7 +40,7 @@
                 <div class="tab-pane fade overflow-auto" id="nav-pangkalan" role="tabpanel" style="height: 500px;">
                     <div class="list-group" id="list-tab" role="tablist">
                     <?php foreach ( $pangkalan as $pangkal ) : ?>
-                        <a class="list-group-item list-group-item-action" id="list-home-list" data-bs-toggle="list" href="#list-home" role="tab" aria-controls="list-home">
+                        <a class="list-group-item list-group-item-action" id="list-home-list" data-bs-toggle="list" href="#list-home" role="tab" aria-controls="list-home" data-lat="<?= $pangkal['kordinat_y'] ?>" data-lng="<?= $pangkal['kordinat_x'] ?>" onclick="pangkalanBtnClick(this)">
                             <h5 class="mb-1"><?= $pangkal['nama'] ?></h5>
                             <p class="mb-1">Tipe: <?php if($pangkal['tipe'] == '1') echo 'Pangkalan'; else echo 'Terminal'; ?></p>
                         </a>
@@ -48,7 +48,7 @@
                     </div>
                 </div>
                 
-                <div class="tab-pane fade" id="nav-angkot" role="tabpanel">
+                <div class="tab-pane fade overflow-auto" id="nav-angkot" role="tabpanel" style="height: 500px;">
                     <div class="list-group" id="list-tab" role="tablist">
                     <?php foreach ( $angkot as $angkt ) : ?>
                         <a class="list-group-item list-group-item-action" id="list-home-list" data-bs-toggle="list" href="#list-home" role="tab" aria-controls="list-home">
@@ -81,6 +81,8 @@
 <script>
     // map init
     var map = L.map('map').locate({setView: true, maxZoom: 14});
+    var currLat, currLng;
+    var destLat, destLng;
     tiles.addTo(map);
     map.on('click', onMapClick);
 
@@ -88,6 +90,9 @@
     map.on('locationfound', function(e){
         var marker = L.marker([e.latitude, e.longitude], {icon: userMarker}).bindPopup('Your are here :)');
         map.addLayer(marker);
+
+        currLat = e.latitude;
+        currLng = e.longitude;
     })
     .on('locationerror', function(e){
         console.log(e);
@@ -107,18 +112,30 @@
     <?php foreach ( $angkot as $angkt ) : ?>
     var pathLine = L.polyline([
         <?= '['.$angkt['rute_berangkat'].'],' ?>
-    ]).addTo(map).bindPopup(
+    ], {color: "<?= $angkt['warna'] ?>"}).addTo(map).bindPopup(
         '<b style="color: <?= $angkt['warna'] ?>">Rute <?= $angkt['kode'] ?></b><hr/>Atur sebagai titik tujuan'
     );
     <?php endforeach; ?>
+    
+    // auto routing
+    var route = '';
+    function pangkalanBtnClick(btn) {
+        destLat = btn.dataset.lat;
+        destLng = btn.dataset.lng;
+        console.log(currLat+' '+currLng)
+        console.log(destLat+' '+destLng)
+        
+        if (route != '') {
+            map.removeControl(route);
+        }
 
-    // // auto routing
-    // L.Routing.control({
-    //     waypoints: [
-    //         L.latLng(-7.260393, 112.634947),
-    //         L.latLng(-7.268566, 112.666431)
-    //     ],
-    // }).addTo(map);
+        route = L.Routing.control({
+            waypoints: [
+                L.latLng(currLat, currLng),
+                L.latLng(destLat, destLng)
+            ],
+        }).addTo(map);
+    }
 </script>
 
 <?php $this->view("templates/footer") ?>

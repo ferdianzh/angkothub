@@ -29,8 +29,10 @@
             <td><?= $angkt['warna'] ?></td>
             <td><?= $angkt['gambar'] ?></td>
             <td><?= $angkt['rute'] ?></td>
-            <td><?= $angkt['rute_berangkat'] ?></td>
-            <td><?= $angkt['rute_kembali'] ?></td>
+            <td class="text-secondary fst-italic">Buka untuk melihat</td>
+            <td class="text-secondary fst-italic">Buka untuk melihat</td>
+            <!-- <td><?= $angkt['rute_berangkat'] ?></td>
+            <td><?= $angkt['rute_kembali'] ?></td> -->
             <td class="text-center">
                <div class="btn-group my-1">
                   <a href="<?= BASEURL ?>/manage/delete/angkot/<?= $angkt['id'] ?>" class="btn btn-danger" onclick="confirm('Hapus data?')">Hapus</a>

@@ -9,8 +9,8 @@
             <th scope="col">#</th>
             <th scope="col">Nama</th>
             <th scope="col">Tipe</th>
-            <th scope="col">Kordinat X</th>
-            <th scope="col">Kordinat Y</th>
+            <th scope="col">Latitude</th>
+            <th scope="col">Longitude</th>
             <th scope="col">Action</th>
          </tr>
       </thead>
@@ -21,8 +21,8 @@
             <th scope="row"><?= $i ?></th>
             <td><?= $pangkal['nama'] ?></td>
             <td><?= $pangkal['tipe'] ?></td>
-            <td><?= $pangkal['kordinat_x'] ?></td>
             <td><?= $pangkal['kordinat_y'] ?></td>
+            <td><?= $pangkal['kordinat_x'] ?></td>
             <td class="text-center">
                <div class="btn-group my-1">
                   <a href="<?= BASEURL ?>/manage/delete/pangkalan/<?= $pangkal['id'] ?>" class="btn btn-danger" onclick="confirm('Hapus data?')">Hapus</a>
