@@ -6,38 +6,13 @@
         <div class="col-3 px-0 shadow">
             <nav class="bg-light pt-3">
                 <div class="nav nav-tabs justify-content-center" id="nav-tab" role="tablist">
-                    <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-rute" type="button" role="tab" aria-controls="nav-rute" aria-selected="true">Cari Rute</button>
-                    <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-pangkalan" type="button" role="tab" aria-controls="nav-pangkalan" aria-selected="false">Pemberhentian</button>
+                    <button class="nav-link active" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-pangkalan" type="button" role="tab" aria-controls="nav-pangkalan" aria-selected="false">Pemberhentian</button>
                     <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-angkot" type="button" role="tab" aria-controls="nav-angkot" aria-selected="false">Angkot</button>
                 </div>
             </nav>
 
             <div class="tab-content pt-4 px-3 bg-white" id="nav-tabContent">
-                <div class="tab-pane fade show active" id="nav-rute" role="tabpanel" aria-labelledby="nav-home-tab">
-                    <div class="mb-3">
-                        <label for="awal" class="form-label">Posisi Awal</label>
-                        <div class="input-group mb-3">
-                            <input type="text" class="form-control" id="awal">
-                            <button class="btn btn-dark" type="button" id="button-awal">
-                                <i class="fas fa-search-location"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="tujuan" class="form-label">Tujuan</label>
-                        <div class="input-group mb-3">
-                            <input type="text" class="form-control" id="tujuan">
-                            <button class="btn btn-dark" type="button" id="button-tujuan">
-                                <i class="fas fa-search-location"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="text-center">
-                        <button class="mt-2 btn bg-hub fw-bold text-white px-4">Mulai</button>
-                    </div>
-                </div>
-
-                <div class="tab-pane fade overflow-auto" id="nav-pangkalan" role="tabpanel" style="height: 500px;">
+                <div class="tab-pane fade overflow-auto show active" id="nav-pangkalan" role="tabpanel" style="height: 500px;">
                     <div class="list-group" id="list-tab" role="tablist">
                     <?php foreach ( $pangkalan as $pangkal ) : ?>
                         <a class="list-group-item list-group-item-action" id="list-home-list" data-bs-toggle="list" href="#list-home" role="tab" aria-controls="list-home" data-lat="<?= $pangkal['kordinat_y'] ?>" data-lng="<?= $pangkal['kordinat_x'] ?>" onclick="pangkalanBtnClick(this)">
@@ -81,10 +56,11 @@
 <script>
     // map init
     var map = L.map('map').locate({setView: true, maxZoom: 14});
-    var currLat, currLng;
-    var destLat, destLng;
     tiles.addTo(map);
     map.on('click', onMapClick);
+    
+    var currLat, currLng;
+    var destLat, destLng;
 
     // marker user
     map.on('locationfound', function(e){
@@ -104,7 +80,7 @@
     var marker = L.marker([
                         <?= $pangkal['kordinat_y'].', '.$pangkal['kordinat_x'] ?>
                     ], {icon: pangkalanMarker}).addTo(map).bindPopup(
-                        '<b><?= $pangkal['nama'] ?></b><hr/>Atur sebagai titik tujuan'
+                        '<b><?= $pangkal['nama'] ?></b>'
                     );
     <?php endforeach; ?>
 
@@ -113,17 +89,15 @@
     var pathLine = L.polyline([
         <?= '['.$angkt['rute_berangkat'].'],' ?>
     ], {color: "<?= $angkt['warna'] ?>"}).addTo(map).bindPopup(
-        '<b style="color: <?= $angkt['warna'] ?>">Rute <?= $angkt['kode'] ?></b><hr/>Atur sebagai titik tujuan'
+        '<b style="color: <?= $angkt['warna'] ?>">Rute <?= $angkt['kode'] ?></b>'
     );
     <?php endforeach; ?>
     
-    // auto routing
+    // pencarian rute ke tujuan
     var route = '';
     function pangkalanBtnClick(btn) {
         destLat = btn.dataset.lat;
         destLng = btn.dataset.lng;
-        console.log(currLat+' '+currLng)
-        console.log(destLat+' '+destLng)
         
         if (route != '') {
             map.removeControl(route);
