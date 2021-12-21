@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 21 Des 2021 pada 12.57
+-- Waktu pembuatan: 21 Des 2021 pada 14.59
 -- Versi server: 10.4.17-MariaDB
 -- Versi PHP: 8.0.1
 
@@ -27,6 +27,7 @@ SET time_zone = "+00:00";
 -- Struktur dari tabel `angkot`
 --
 
+DROP TABLE IF EXISTS `angkot`;
 CREATE TABLE `angkot` (
   `id` int(10) UNSIGNED NOT NULL,
   `id_pangkalan` int(10) UNSIGNED NOT NULL,
@@ -55,6 +56,7 @@ INSERT INTO `angkot` (`id`, `id_pangkalan`, `kode`, `warna`, `gambar`, `rute`, `
 -- Struktur dari tabel `pangkalan`
 --
 
+DROP TABLE IF EXISTS `pangkalan`;
 CREATE TABLE `pangkalan` (
   `id` int(10) UNSIGNED NOT NULL,
   `nama` varchar(50) NOT NULL,
